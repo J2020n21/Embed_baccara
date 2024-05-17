@@ -1,7 +1,8 @@
 ﻿#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include <unistd.h>
+#include <unistd.h>
+#include <time.h>
 //#include <sys.time.h>
 //#include <fcntl.h>
 //#include <sys/ioctl.h>
@@ -31,22 +32,30 @@ void win();
 void lose();
 
 struct Player {
-	int card1, card2, card3;
+	int card1;
+	int card2;
+	int card3;
 	int cardCurrentlyHave;
 	int cardSum;
 };
 
 void setCards(struct Player* p) {
-	Sleep(1000);
+//ex.card1 = (rand() % 11 == 0) ? (rand() % 11) : (rand() % 11);
 	srand((unsigned int)time(NULL));
-	p->card1 = rand() % 11;
-	p->card2 = rand() % 11;
+	sleep(1.3);
+	int num = rand() % 11;
+	sleep(0.4);
+	int num2 = rand() % 11;
+	
+	p->card1 = num==0? rand() % 11: num;
+	p->card2 = num2==0? rand() % 11: num2;
 }
 
 //세번째 카드 할당하기
+/*
 void set3rdCard(struct Player* p) {
 	p->card3 = rand() % 11;
-}
+}*/
 
 //stand일 경우 같은 규칙으로 딜러도 카드를 갖는다.
 void is3rdCard(struct Player* u, struct Player* c) {
@@ -59,7 +68,7 @@ void is3rdCard(struct Player* u, struct Player* c) {
 		return; }
 	else if (u->cardSum == 6 || 7) {
 		printf("Do you want 3rd card? Type y or n.\n");
-		scanf_s("%c", &answer);
+		scanf("%c", &answer);
 		if (answer == 'y') {STAND = true; }
 		else { STAND = false; }
 	}
@@ -93,7 +102,7 @@ void printWinner(int value,int choice) {
 int userChoice() {
 	printf("Choose Number: 0-You win / 1-Computer wins / 2-Tie ");
 	int value;
-	scanf_s("%d", &value);
+	scanf("%d", &value);
 	printf("You choose %d.\n", value);
 	return value;
 }
@@ -112,7 +121,8 @@ void logo() {
 void explain() {
 	printf("어느쪽이 이길까요? 컴퓨터와 대결합니다.\n 1.카드는 총 두장입니다.\
 		\n2.두 카드의 수를 더해 일의 자리 수가 9에 가까운 사람이 이깁니다.\
-\n 3.컴퓨터와 내 카드 중 어느쪽이 9에 가까울지 골라주세요. 맞추면 승리, 틀리면 패배입니다.\n");
+\n 3.컴퓨터와 내 카드 중 어느쪽이 9에 가까울지 골라주세요. 맞추면 승리, 틀리면 패배입니다.\
+\n곧 내 카드와 컴퓨터의 카드가 공개됩니다 ...\n");
 }
 
 void win() {
@@ -158,6 +168,7 @@ int main() {
 	printf("Computer Cards number: %d,%d\n", Computer.card1, Computer.card2);
 	printf("main cardsum: %d,%d\n", User.cardSum, Computer.cardSum);
 	//세번째 카드 필요한지 여부 판단
+	/*
 	is3rdCard(pUser, pCom);
 	//세번째 카드를 받는 경우
 	if (USER_GET_THIRDCARD) {
@@ -173,7 +184,7 @@ int main() {
 		}
 		
 	}
-
+*/
 
 	int choice = userChoice(); //누가 이길지 추측
 	int r = compareCards(pUser, pCom); //카드 3장인 경우 고려하여 추가
